@@ -691,8 +691,18 @@
                 🌹.........................................................................................................................................🌹From
                 With Love 8/3!🌹
             </textPath>
-        </text>
 
+           
+           
+        </text>
+        <text dy="6">
+            <textPath style="font-family: fantasy;" xlink:href="#text-click"">
+                🥰Bấm vô thư điii
+            </textPath>
+
+           
+           
+        </text>
         <use id="useThePath" xlink:href="#partialPath" stroke="white" stroke-width=".5" stroke-opacity=".5" fill="none"
             style="display:none;" />
     </svg>
@@ -864,6 +874,23 @@
             //console.log(d)
             partialPath.setAttributeNS(null, "d", d);
         }
+        function drawStraightLine(points, path, index) {
+    let d;
+
+    if (index > 0) {
+        // Nếu là đoạn tiếp theo, lấy điểm cuối của đoạn trước
+        d = subpaths[index].previous.d;
+    } else {
+        // Nếu là đoạn đầu tiên, bắt đầu bằng Move To (M)
+        d = `M${points[0][0]},${points[0][1]}`;
+    }
+
+    // Vẽ đường thẳng đến điểm cuối (dùng L - Line To)
+    d += ` L${points[3][0]},${points[3][1]}`;
+
+    // Gán giá trị d cho path
+    path.setAttributeNS(null, "d", d);
+}
     </script>
 
     <div id="castle" style="display: none;">
@@ -1004,12 +1031,13 @@
                 document.querySelector("#rose-t").style.display = "none";
                 document.querySelector("#castle").style.display = "flex";
                 document.querySelector("#theSvg").style.display = "inherit"
-
+                
                 rid = window.requestAnimationFrame(Typing);
                 function Typing() {
                     rid = window.requestAnimationFrame(Typing);
                     if (t >= 1) {
                         window.cancelAnimationFrame(rid);
+                        showMessage();
                         rid = null;
                     } else {
                         t += 0.0025;
@@ -1026,9 +1054,46 @@
                     drawCBezier(newPoints, partialPath, index);
                 }
             }
+            
             const head = document.getElementsByTagName('head')[0];
             let animationId = 1;
+            function showMessage() {
+    const message = document.createElement("div");
+    message.id = "center-message";
+    message.textContent = "Click in letter! 💗";
 
+    // Nhúng kiểu dáng trực tiếp bằng style
+    message.style.position = "absolute";
+    message.style.top = "25%"; // Giữ vị trí top 25% như bạn yêu cầu
+    message.style.left = "50%";
+    message.style.transform = "translate(-50%, -50%)";
+    message.style.color = "#ff66b2"; // Màu chữ hồng
+    message.style.fontSize = "32px";
+    message.style.fontFamily = "fantasy"; // Font fantasy như bạn chọn
+    message.style.textAlign = "center";
+    message.style.zIndex = "1000";
+    message.style.opacity = "0"; // Bắt đầu ẩn để làm animation
+    // Thêm hiệu ứng phát sáng bằng text-shadow
+    message.style.textShadow = "0 0 10px #ff66b2, 0 0 20px #ff99cc, 0 0 30px #ffffff"; 
+
+    // Thêm animation bằng keyframes qua JavaScript
+    message.style.animation = "fadeInScale 1.5s ease-in-out forwards";
+    message.style.setProperty(
+        "--webkit-animation",
+        "fadeInScale 1.5s ease-in-out forwards"
+    ); // Hỗ trợ trình duyệt Webkit
+    document.body.appendChild(message);
+
+    // Định nghĩa keyframes bằng cách chèn <style> động
+    const styleSheet = document.createElement("style");
+    styleSheet.textContent = `
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+}
             function CreateMagicDust(x1, x2, y1, y2, sizeRatio, fallingTime, animationDelay, node = 'main') {
                 let dust = document.createElement('span');
                 let animation = document.createElement('style');
@@ -1098,12 +1163,12 @@
 
         })();
     </script>
-
+         
     <script>
         // .textLetter text h2
         let indexText = 0;
         let textLetter = document.querySelector('.textLetter h2');
-        const textLetterH2 = "Gửi cậu!";
+        const textLetterH2 = "Gửi bạn!";
         let timoutTextLetter;
 
         function textCharLetter() {
@@ -1116,7 +1181,7 @@
                 clearInterval(timoutTextLetter);
                 setTimeout(() => {
                     funcTimeoutLetterContent()
-                }, 500)
+                }, 100)
             }
         }
         function funcTimeoutLetter() {
@@ -1125,17 +1190,17 @@
             clearInterval(timoutTextLetter);
             timoutTextLetter = setInterval(() => {
                 textCharLetter();
-            }, 200)
+            }, 100)
         }
 
         // chữ của thư bạn muốn gửi
         let indexTextContent = 0;
         let textLetterContent = document.querySelector('.contentLetter');
-        const textLetterP = "Hôm nay là ngày 08/03. Xin gửi lời chúc tới người tớ yêu thương nhất. Luôn vui vẻ, luôn hạnh phúc và luôn may mắn trong cuộc sống, ngày càng xinh đẹp. Xin gửi tất cả lời chúc tốt đẹp đến với cậu. Love You💗";
+        const textLetterP = "Chúc bạn 8/3 vui vẻ, ngày càng vui vẻ hạnh phúc, nhan sắc thăng hoa, học vấn thông thiên, chúc bạn mọi thứ nhé💗";
         let timoutTextLetterContent;
         function textCharLetterContent() {
             if (indexTextContent < textLetterP.length) {
-                textLetterContent.textContent += textLetterP[indexTextContent];
+                textLetterContent.textContent += textLetterP[indexTextContent].replace(/\n/g, "<br>");
                 indexTextContent++;
                 setTimeout(indexTextContent, 1);
             }
@@ -1244,5 +1309,8 @@
 
     </script>
 </body>
-
+<p id="text-click" style=" display: none;   font-family: fantasy;
+         color: indianred;
+         font-size: 50px;
+         top: 80%;">Click me now !</p>
 </html>
